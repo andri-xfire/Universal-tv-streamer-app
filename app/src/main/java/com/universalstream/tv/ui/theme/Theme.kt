@@ -1,5 +1,6 @@
 package com.universalstream.tv.ui.theme
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -143,10 +144,17 @@ fun UniversalStreamTheme(
     reduceMotion: Boolean,
     content: @Composable () -> Unit,
 ) {
+    val colors = if (darkTheme) DarkColors else LightColors
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
+        colorScheme = colors,
         typography = TvTypography,
     ) {
-        CompositionLocalProvider(LocalReduceMotion provides reduceMotion, content = content)
+        // The app draws its screens on bare gradient Boxes (not Surfaces), so set a readable
+        // default content colour here; Surface/TvSurface still override it locally where needed.
+        CompositionLocalProvider(
+            LocalReduceMotion provides reduceMotion,
+            LocalContentColor provides colors.onBackground,
+            content = content,
+        )
     }
 }

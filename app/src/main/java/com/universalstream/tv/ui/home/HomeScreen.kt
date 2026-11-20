@@ -132,6 +132,13 @@ fun HomeScreen(
 
             Spacer(Modifier.height(20.dp))
 
+            BaseSelector(
+                selected = state.base,
+                onSelect = viewModel::onBaseChanged,
+            )
+
+            Spacer(Modifier.height(12.dp))
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -142,6 +149,11 @@ fun HomeScreen(
                     onSubmit = viewModel::submit,
                     modifier = Modifier.weight(1f),
                     focusRequester = urlFocus,
+                    placeholder = if (state.base == UrlBase.Manual) {
+                        "Type a website or short link, e.g. bit.ly/abc"
+                    } else {
+                        "Enter the code after ${state.base.label} e.g. abc123"
+                    },
                 )
                 TvButton("Paste", onClick = { viewModel.onPasted(clipboard.getText()?.text) })
                 TvButton("Clear", onClick = viewModel::clearInput, icon = Icons.Default.Clear)
@@ -302,6 +314,47 @@ fun HomeScreen(
             },
         ) {
             Text("Your list of recently visited websites will be deleted. Favorites are kept.", style = MaterialTheme.typography.bodyLarge)
+        }
+    }
+}
+
+/**
+ * A D-pad friendly row of chips that choose what the URL box is combined with:
+ * Manual (type the whole address) or one of the short-link bases. The selected chip is highlighted.
+ */
+@Composable
+private fun BaseSelector(
+    selected: UrlBase,
+    onSelect: (UrlBase) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Text(
+            "URL base:",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp, end = 2.dp),
+        )
+        UrlBase.values().forEach { base ->
+            val isSelected = base == selected
+            TvSurface(
+                onClick = { onSelect(base) },
+                shape = RoundedCornerShape(20.dp),
+                containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                focusScale = 1.04f,
+            ) {
+                Text(
+                    base.label,
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+                )
+            }
         }
     }
 }

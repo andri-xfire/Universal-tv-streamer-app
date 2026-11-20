@@ -63,6 +63,7 @@ fun UrlInputField(
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester = remember { FocusRequester() },
+    placeholder: String = "Type a website or short link, e.g. bit.ly/abc",
 ) {
     var editing by remember { mutableStateOf(false) }
 
@@ -110,7 +111,7 @@ fun UrlInputField(
                 },
             singleLine = true,
             textStyle = MaterialTheme.typography.titleMedium,
-            placeholder = { Text("Type a website or short link, e.g. bit.ly/abc", style = MaterialTheme.typography.titleMedium) },
+            placeholder = { Text(placeholder, style = MaterialTheme.typography.titleMedium) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Uri,
@@ -164,7 +165,7 @@ fun UrlInputField(
             ) {
                 Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(28.dp))
                 Text(
-                    text = value.ifEmpty { "Type a website or short link, e.g. bit.ly/abc" },
+                    text = value.ifEmpty { placeholder },
                     style = MaterialTheme.typography.titleMedium,
                     color = if (value.isEmpty()) LocalContentColor.current.copy(alpha = 0.65f) else LocalContentColor.current,
                     maxLines = 1,

@@ -35,6 +35,7 @@ sealed interface ResolutionState {
 
 data class HomeUiState(
     val input: String = "",
+    val base: UrlBase = UrlBase.Manual,
     val inputError: String? = null,
     val inputHint: String? = null,
     val resolution: ResolutionState = ResolutionState.Idle,
@@ -67,7 +68,12 @@ class HomeViewModel(
     private var resolveJob: Job? = null
 
     fun onInputChanged(text: String) {
-        _state.update { it.copy(input = text, inputError = null, inputHint = hintFor(text)) }
+        _state.update { it.copy(input = text, inputError = null, inputHint = hintFor(text, it.base)) }
+    }
+
+    /** Switches the base the typed value is combined with (Manual, shorturl.at, bit.ly, tinyurl.com). */
+    fun onBaseChanged(base: UrlBase) {
+        _state.update { it.copy(base = base, inputError = null, inputHint = hintFor(it.input, base)) }
     }
 
     fun setInput(text: String) = onInputChanged(text)
@@ -84,7 +90,9 @@ class HomeViewModel(
     }
 
     fun submit() {
-        when (val parsed = UrlUtils.parse(_state.value.input)) {
+        val current = _state.value
+        val effective = current.base.combine(current.input)
+        when (val parsed = UrlUtils.parse(effective)) {
             is UrlParseResult.Invalid -> _state.update { it.copy(inputError = describe(parsed)) }
             is UrlParseResult.Valid -> startResolution(parsed.url)
         }
@@ -139,7 +147,15 @@ class HomeViewModel(
         viewModelScope.launch { repository.removeFavorite(url) }
     }
 
-    private fun hintFor(text: String): String? {
+    private fun hintFor(text: String, base: UrlBase): String? {
+        if (base != UrlBase.Manual) {
+            val code = text.trim()
+            return if (code.isEmpty()) {
+                "Enter the code after ${base.label} — it opens ${base.prefix}…"
+            } else {
+                "Will open ${base.combine(code)}"
+            }
+        }
         val parsed = UrlUtils.parse(text) as? UrlParseResult.Valid ?: return null
         return when {
             ShortenerRegistry.isKnownShortener(parsed.host) -> "Short link — the destination will be checked before opening"

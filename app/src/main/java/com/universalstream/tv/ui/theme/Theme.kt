@@ -6,7 +6,9 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -14,43 +16,51 @@ import androidx.compose.ui.unit.sp
 import com.universalstream.tv.ui.components.LocalReduceMotion
 
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFF6CC7FF),
-    onPrimary = Color(0xFF00243A),
-    primaryContainer = Color(0xFF0E4A6E),
-    onPrimaryContainer = Color(0xFFD5ECFF),
-    secondary = Color(0xFFFFB86B),
-    onSecondary = Color(0xFF3A2000),
-    secondaryContainer = Color(0xFF5A3A10),
-    onSecondaryContainer = Color(0xFFFFE2C2),
-    background = Color(0xFF0A0E15),
-    onBackground = Color(0xFFF1F4F9),
-    surface = Color(0xFF121822),
-    onSurface = Color(0xFFF1F4F9),
-    surfaceVariant = Color(0xFF1E2633),
-    onSurfaceVariant = Color(0xFFBFC8D6),
-    outline = Color(0xFF4A5568),
-    error = Color(0xFFFF7A7A),
+    primary = Color(0xFF8AB4FF),
+    onPrimary = Color(0xFF07254A),
+    primaryContainer = Color(0xFF1E4C86),
+    onPrimaryContainer = Color(0xFFDCE9FF),
+    secondary = Color(0xFFFFB38C),
+    onSecondary = Color(0xFF3A1D08),
+    secondaryContainer = Color(0xFF6B3A24),
+    onSecondaryContainer = Color(0xFFFFE2D2),
+    tertiary = Color(0xFFC7A9FF),
+    onTertiary = Color(0xFF2A1A52),
+    tertiaryContainer = Color(0xFF433072),
+    onTertiaryContainer = Color(0xFFEADDFF),
+    background = Color(0xFF0A0F1E),
+    onBackground = Color(0xFFEDF1F9),
+    surface = Color(0xFF141C2E),
+    onSurface = Color(0xFFEDF1F9),
+    surfaceVariant = Color(0xFF1F2A42),
+    onSurfaceVariant = Color(0xFFC4CEE2),
+    outline = Color(0xFF3B4A68),
+    error = Color(0xFFFF8A8A),
     onError = Color(0xFF3A0000),
     errorContainer = Color(0xFF5C1A1A),
     onErrorContainer = Color(0xFFFFDADA),
 )
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFF00629B),
+    primary = Color(0xFF2B5BD7),
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFCDE5FF),
-    onPrimaryContainer = Color(0xFF001D33),
-    secondary = Color(0xFF8A5100),
+    primaryContainer = Color(0xFFDBE6FF),
+    onPrimaryContainer = Color(0xFF001A40),
+    secondary = Color(0xFFB5531F),
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFFFDDB8),
-    onSecondaryContainer = Color(0xFF2C1600),
-    background = Color(0xFFF4F6FA),
-    onBackground = Color(0xFF111418),
+    secondaryContainer = Color(0xFFFFDBC9),
+    onSecondaryContainer = Color(0xFF341200),
+    tertiary = Color(0xFF6B4EA8),
+    onTertiary = Color.White,
+    tertiaryContainer = Color(0xFFEADDFF),
+    onTertiaryContainer = Color(0xFF24104F),
+    background = Color(0xFFF1F4FB),
+    onBackground = Color(0xFF111622),
     surface = Color.White,
-    onSurface = Color(0xFF111418),
-    surfaceVariant = Color(0xFFE1E6EE),
-    onSurfaceVariant = Color(0xFF3F4856),
-    outline = Color(0xFF7A8494),
+    onSurface = Color(0xFF111622),
+    surfaceVariant = Color(0xFFE2E8F4),
+    onSurfaceVariant = Color(0xFF3E4759),
+    outline = Color(0xFF8793A8),
     error = Color(0xFFB3261E),
     onError = Color.White,
     errorContainer = Color(0xFFF9DEDC),
@@ -77,6 +87,32 @@ private val TvTypography = Typography(
 object TvSafeArea {
     val horizontal = 48.dp
     val vertical = 27.dp
+}
+
+/** Soft, depth-giving gradients so screens don't read as one flat block of colour. */
+object TvGradients {
+    /** Full-screen background: a gentle primary-tinted top fading into the deep base colour. */
+    @Composable
+    fun appBackground(): Brush {
+        val scheme = MaterialTheme.colorScheme
+        return Brush.verticalGradient(
+            0.0f to lerp(scheme.background, scheme.primary, 0.12f),
+            0.45f to scheme.background,
+            1.0f to lerp(scheme.background, scheme.tertiary, 0.08f),
+        )
+    }
+
+    /** The raised "hero" panel that holds the search controls. */
+    @Composable
+    fun heroPanel(): Brush {
+        val scheme = MaterialTheme.colorScheme
+        return Brush.linearGradient(
+            listOf(
+                lerp(scheme.surface, scheme.primary, 0.10f),
+                lerp(scheme.surface, scheme.tertiary, 0.06f),
+            ),
+        )
+    }
 }
 
 @Composable

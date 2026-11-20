@@ -37,6 +37,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -96,6 +97,7 @@ fun TvSurface(
         else -> contentColor
     }
     val outline = MaterialTheme.colorScheme.onBackground
+    val glowColor = MaterialTheme.colorScheme.primary
     val longClickKeys = if (onLongClick != null) {
         Modifier.onPreviewKeyEvent { event ->
             if (event.key == Key.Menu) {
@@ -115,6 +117,13 @@ fun TvSurface(
                 scaleX = scale
                 scaleY = scale
             }
+            .then(
+                if (focused) {
+                    Modifier.shadow(14.dp, shape, ambientColor = glowColor, spotColor = glowColor)
+                } else {
+                    Modifier
+                },
+            )
             .clip(shape)
             .background(background, shape)
             .then(if (focused) Modifier.border(3.dp, outline, shape) else Modifier)

@@ -3,6 +3,7 @@ package com.universalstream.tv.ui.home
 import android.os.SystemClock
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,8 +45,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.style.TextOverflow
@@ -59,6 +62,7 @@ import com.universalstream.tv.ui.components.TvButton
 import com.universalstream.tv.ui.components.TvDialog
 import com.universalstream.tv.ui.components.TvSurface
 import com.universalstream.tv.ui.components.requestFocusSafely
+import com.universalstream.tv.ui.theme.TvGradients
 import com.universalstream.tv.ui.theme.TvSafeArea
 import kotlinx.coroutines.delay
 
@@ -111,63 +115,108 @@ fun HomeScreen(
     val historyUrls = remember(history) { history.map { it.url }.toSet() }
     val homePageUrl = (UrlUtils.parse(settings.homePage) as? UrlParseResult.Valid)?.url
 
-    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+    Box(Modifier.fillMaxSize().background(TvGradients.appBackground())) {
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(horizontal = TvSafeArea.horizontal, vertical = TvSafeArea.vertical),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(40.dp),
-                )
-                Spacer(Modifier.width(12.dp))
-                Text("Universal Stream TV", style = MaterialTheme.typography.headlineMedium)
+                Box(
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.tertiary,
+                                ),
+                            ),
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(32.dp),
+                    )
+                }
+                Spacer(Modifier.width(16.dp))
+                Column {
+                    Text("Universal Stream TV", style = MaterialTheme.typography.headlineMedium)
+                    Text(
+                        "Streaming web untuk TV-mu",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
                 Spacer(Modifier.weight(1f))
-                TvButton("Settings", onClick = onOpenSettings, icon = Icons.Default.Settings)
+                TvButton("Pengaturan", onClick = onOpenSettings, icon = Icons.Default.Settings)
             }
 
             Spacer(Modifier.height(20.dp))
 
-            BaseSelector(
-                selected = state.base,
-                onSelect = viewModel::onBaseChanged,
-            )
-
-            Spacer(Modifier.height(12.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            // "Hero" panel: groups the search controls so they feel like one soft card.
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(28.dp))
+                    .background(TvGradients.heroPanel())
+                    .border(
+                        1.dp,
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.45f),
+                        RoundedCornerShape(28.dp),
+                    )
+                    .padding(horizontal = 24.dp, vertical = 20.dp),
             ) {
-                UrlInputField(
-                    value = state.input,
-                    onValueChange = viewModel::onInputChanged,
-                    onSubmit = viewModel::submit,
-                    modifier = Modifier.weight(1f),
-                    focusRequester = urlFocus,
-                    placeholder = if (state.base == UrlBase.Manual) {
-                        "Type a website or short link, e.g. bit.ly/abc"
-                    } else {
-                        "Enter the code after ${state.base.label} e.g. abc123"
-                    },
+                Text(
+                    "Buka situs atau tempel tautan pendek",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 4.dp, bottom = 14.dp),
                 )
-                TvButton("Paste", onClick = { viewModel.onPasted(clipboard.getText()?.text) })
-                TvButton("Clear", onClick = viewModel::clearInput, icon = Icons.Default.Clear)
-                TvButton("Open", onClick = viewModel::submit, icon = Icons.Default.PlayArrow, primary = true)
-            }
 
-            Box(Modifier.heightIn(min = 34.dp).padding(start = 8.dp, top = 6.dp)) {
-                val error = state.inputError
-                val hint = state.inputHint
-                when {
-                    error != null -> Text(error, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
-                    hint != null -> Text(hint, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                BaseSelector(
+                    selected = state.base,
+                    onSelect = viewModel::onBaseChanged,
+                )
+
+                Spacer(Modifier.height(14.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    UrlInputField(
+                        value = state.input,
+                        onValueChange = viewModel::onInputChanged,
+                        onSubmit = viewModel::submit,
+                        modifier = Modifier.weight(1f),
+                        focusRequester = urlFocus,
+                        placeholder = if (state.base == UrlBase.Manual) {
+                            "Ketik alamat situs atau tautan pendek, mis. bit.ly/abc"
+                        } else {
+                            "Ketik kode setelah ${state.base.label} mis. abc123"
+                        },
+                    )
+                    TvButton("Tempel", onClick = { viewModel.onPasted(clipboard.getText()?.text) })
+                    TvButton("Hapus", onClick = viewModel::clearInput, icon = Icons.Default.Clear)
+                    TvButton("Buka", onClick = viewModel::submit, icon = Icons.Default.PlayArrow, primary = true)
+                }
+
+                Box(Modifier.heightIn(min = 30.dp).padding(start = 4.dp, top = 8.dp)) {
+                    val error = state.inputError
+                    val hint = state.inputHint
+                    when {
+                        error != null -> Text(error, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+                        hint != null -> Text(hint, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
             }
+
+            Spacer(Modifier.height(18.dp))
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth().weight(1f),
@@ -176,7 +225,7 @@ fun HomeScreen(
             ) {
                 if (session != null && session.hasSession) {
                     item(key = "continue") {
-                        SiteSection(title = "Continue") {
+                        SiteSection(title = "Lanjutkan") {
                             LazyRow(contentPadding = CardRowPadding, horizontalArrangement = Arrangement.spacedBy(18.dp)) {
                                 item {
                                     SiteCard(
@@ -192,15 +241,15 @@ fun HomeScreen(
                 }
 
                 item(key = "favorites") {
-                    SiteSection(title = "Favorites") {
+                    SiteSection(title = "Favorit") {
                         if (favorites.isEmpty() && homePageUrl == null) {
-                            EmptyHint("No favorites yet. Open a site, press MENU (or hold BACK) and choose Favorite.")
+                            EmptyHint("Belum ada favorit. Buka sebuah situs, tekan MENU (atau tahan BACK), lalu pilih Favorit.")
                         } else {
                             LazyRow(contentPadding = CardRowPadding, horizontalArrangement = Arrangement.spacedBy(18.dp)) {
                                 if (homePageUrl != null) {
                                     item(key = "home:$homePageUrl") {
                                         SiteCard(
-                                            title = "Home page",
+                                            title = "Beranda",
                                             url = homePageUrl,
                                             icon = Icons.Default.Home,
                                             onClick = { viewModel.open(homePageUrl) },
@@ -224,15 +273,15 @@ fun HomeScreen(
 
                 item(key = "history") {
                     SiteSection(
-                        title = "Recently visited",
+                        title = "Baru dikunjungi",
                         action = if (history.isNotEmpty()) {
-                            { TvButton("Clear all", onClick = { confirmClearHistory = true }, icon = Icons.Default.Delete) }
+                            { TvButton("Hapus semua", onClick = { confirmClearHistory = true }, icon = Icons.Default.Delete) }
                         } else {
                             null
                         },
                     ) {
                         if (history.isEmpty()) {
-                            EmptyHint("Websites you open will appear here.")
+                            EmptyHint("Situs yang kamu buka akan muncul di sini.")
                         } else {
                             LazyRow(contentPadding = CardRowPadding, horizontalArrangement = Arrangement.spacedBy(18.dp)) {
                                 items(history, key = { "hist:" + it.url }) { entry ->
@@ -252,7 +301,7 @@ fun HomeScreen(
 
                 item(key = "tip") {
                     Text(
-                        "Tip: hold OK or press MENU on a card for more options.",
+                        "Tips: tahan OK atau tekan MENU pada kartu untuk opsi lainnya.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp),
@@ -268,7 +317,7 @@ fun HomeScreen(
                 contentColor = MaterialTheme.colorScheme.inverseOnSurface,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 40.dp),
             ) {
-                Text("Press BACK again to exit", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(horizontal = 28.dp, vertical = 14.dp))
+                Text("Tekan BACK sekali lagi untuk keluar", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(horizontal = 28.dp, vertical = 14.dp))
             }
         }
     }
@@ -302,18 +351,18 @@ fun HomeScreen(
         val focus = remember { FocusRequester() }
         LaunchedEffect(Unit) { focus.requestFocusSafely() }
         TvDialog(
-            title = "Clear all history?",
+            title = "Hapus semua riwayat?",
             onDismiss = { confirmClearHistory = false },
             icon = Icons.Default.Delete,
             buttons = {
-                TvButton("Cancel", onClick = { confirmClearHistory = false }, modifier = Modifier.focusRequester(focus))
-                TvButton("Clear history", onClick = {
+                TvButton("Batal", onClick = { confirmClearHistory = false }, modifier = Modifier.focusRequester(focus))
+                TvButton("Hapus riwayat", onClick = {
                     confirmClearHistory = false
                     viewModel.clearHistory()
                 }, primary = true)
             },
         ) {
-            Text("Your list of recently visited websites will be deleted. Favorites are kept.", style = MaterialTheme.typography.bodyLarge)
+            Text("Daftar situs yang baru kamu kunjungi akan dihapus. Favorit tetap tersimpan.", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
@@ -334,7 +383,7 @@ private fun BaseSelector(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(
-            "URL base:",
+            "Basis URL:",
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp, end = 2.dp),
@@ -431,17 +480,17 @@ private fun SiteOptionsDialog(
     TvDialog(title = item.title.ifBlank { UrlUtils.hostOf(item.url) ?: item.url }, onDismiss = onDismiss) {
         Text(UrlUtils.ellipsize(item.url, 140), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            TvButton("Open", onClick = onOpen, icon = Icons.Default.PlayArrow, primary = true, modifier = Modifier.fillMaxWidth().focusRequester(focus))
+            TvButton("Buka", onClick = onOpen, icon = Icons.Default.PlayArrow, primary = true, modifier = Modifier.fillMaxWidth().focusRequester(focus))
             TvButton(
-                if (item.isFavorite) "Remove from favorites" else "Add to favorites",
+                if (item.isFavorite) "Hapus dari favorit" else "Tambah ke favorit",
                 onClick = onToggleFavorite,
                 icon = Icons.Default.Star,
                 modifier = Modifier.fillMaxWidth(),
             )
             if (item.inHistory) {
-                TvButton("Delete from history", onClick = onDeleteHistory, icon = Icons.Default.Delete, modifier = Modifier.fillMaxWidth())
+                TvButton("Hapus dari riwayat", onClick = onDeleteHistory, icon = Icons.Default.Delete, modifier = Modifier.fillMaxWidth())
             }
-            TvButton("Cancel", onClick = onDismiss, modifier = Modifier.fillMaxWidth())
+            TvButton("Batal", onClick = onDismiss, modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -458,16 +507,16 @@ private fun ResolutionDialogs(
             val focus = remember { FocusRequester() }
             LaunchedEffect(Unit) { focus.requestFocusSafely() }
             TvDialog(
-                title = "Checking link…",
+                title = "Memeriksa tautan…",
                 onDismiss = onCancel,
-                buttons = { TvButton("Cancel", onClick = onCancel, modifier = Modifier.focusRequester(focus)) },
+                buttons = { TvButton("Batal", onClick = onCancel, modifier = Modifier.focusRequester(focus)) },
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                     CircularProgressIndicator(modifier = Modifier.size(40.dp))
                     Column {
                         Text(UrlUtils.ellipsize(resolution.url, 90), style = MaterialTheme.typography.titleSmall)
                         Text(
-                            "Following redirects to find the real destination.",
+                            "Mengikuti pengalihan untuk menemukan tujuan sebenarnya.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -480,13 +529,13 @@ private fun ResolutionDialogs(
             val focus = remember { FocusRequester() }
             LaunchedEffect(Unit) { focus.requestFocusSafely() }
             TvDialog(
-                title = "Couldn't resolve the link",
+                title = "Tidak bisa membuka tautan",
                 onDismiss = onCancel,
                 icon = Icons.Default.Warning,
                 buttons = {
-                    TvButton("Cancel", onClick = onCancel)
+                    TvButton("Batal", onClick = onCancel)
                     TvButton(
-                        "Open original link",
+                        "Buka tautan asli",
                         onClick = { onOpen(resolution.originalUrl) },
                         primary = true,
                         modifier = Modifier.focusRequester(focus),
@@ -494,9 +543,9 @@ private fun ResolutionDialogs(
                 },
             ) {
                 Text(resolution.message, style = MaterialTheme.typography.bodyLarge)
-                LabeledUrl("Link", resolution.originalUrl)
+                LabeledUrl("Tautan", resolution.originalUrl)
                 Text(
-                    "You can still open the original link; the website will handle the redirect itself.",
+                    "Kamu tetap bisa membuka tautan aslinya; situs akan menangani pengalihannya sendiri.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -516,12 +565,12 @@ private fun PreviewDialog(
     // A secure-to-insecure downgrade is suspicious: default focus goes to Cancel.
     LaunchedEffect(Unit) { (if (outcome.downgradedToHttp) cancelFocus else openFocus).requestFocusSafely() }
     TvDialog(
-        title = "Open this website?",
+        title = "Buka situs ini?",
         onDismiss = onCancel,
         buttons = {
-            TvButton("Cancel", onClick = onCancel, modifier = Modifier.focusRequester(cancelFocus))
+            TvButton("Batal", onClick = onCancel, modifier = Modifier.focusRequester(cancelFocus))
             TvButton(
-                "Open",
+                "Buka",
                 onClick = { onOpen(outcome.finalUrl) },
                 icon = Icons.Default.PlayArrow,
                 primary = true,
@@ -529,17 +578,17 @@ private fun PreviewDialog(
             )
         },
     ) {
-        LabeledUrl("Original link", outcome.originalUrl)
-        LabeledUrl("Destination", outcome.finalUrl, emphasize = true)
+        LabeledUrl("Tautan asli", outcome.originalUrl)
+        LabeledUrl("Tujuan", outcome.finalUrl, emphasize = true)
         val details = buildString {
-            append(if (outcome.redirectCount == 1) "1 redirect" else "${outcome.redirectCount} redirects")
-            if (outcome.usedBrowserFallback) append(" · destination found by loading the link page")
+            append(if (outcome.redirectCount == 1) "1 pengalihan" else "${outcome.redirectCount} pengalihan")
+            if (outcome.usedBrowserFallback) append(" · tujuan ditemukan dengan memuat halaman tautan")
         }
         Text(details, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         if (outcome.downgradedToHttp) {
-            WarningText("This link switched from a secure (HTTPS) address to an insecure one. Only continue if you trust it.")
+            WarningText("Tautan ini beralih dari alamat aman (HTTPS) ke alamat yang tidak aman. Lanjutkan hanya jika kamu mempercayainya.")
         } else if (outcome.isInsecure) {
-            WarningText("This website does not use HTTPS. Anything you enter there could be seen by others on the network.")
+            WarningText("Situs ini tidak menggunakan HTTPS. Apa pun yang kamu masukkan di sana bisa dilihat orang lain di jaringan.")
         }
     }
 }

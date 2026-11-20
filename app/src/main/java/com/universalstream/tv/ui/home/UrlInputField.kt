@@ -63,7 +63,7 @@ fun UrlInputField(
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester = remember { FocusRequester() },
-    placeholder: String = "Type a website or short link, e.g. bit.ly/abc",
+    placeholder: String = "Ketik alamat situs atau tautan pendek, mis. bit.ly/abc",
 ) {
     var editing by remember { mutableStateOf(false) }
 

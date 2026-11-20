@@ -10,7 +10,7 @@ import java.util.Locale
  * the matching short-link host added automatically, which is far less typing on a TV remote.
  */
 enum class UrlBase(val label: String, val prefix: String?) {
-    Manual("Manual (full URL)", null),
+    Manual("Manual (URL penuh)", null),
     ShortUrl("shorturl.at/", "https://shorturl.at/"),
     Bitly("bit.ly/", "https://bit.ly/"),
     TinyUrl("tinyurl.com/", "https://tinyurl.com/");

@@ -83,7 +83,7 @@ class HomeViewModel(
     fun onPasted(text: String?) {
         val clean = text?.trim().orEmpty()
         if (clean.isEmpty()) {
-            _state.update { it.copy(inputError = "The clipboard is empty.") }
+            _state.update { it.copy(inputError = "Papan klip kosong.") }
         } else {
             onInputChanged(clean)
         }
@@ -151,26 +151,26 @@ class HomeViewModel(
         if (base != UrlBase.Manual) {
             val code = text.trim()
             return if (code.isEmpty()) {
-                "Enter the code after ${base.label} — it opens ${base.prefix}…"
+                "Ketik kode setelah ${base.label} — akan membuka ${base.prefix}…"
             } else {
-                "Will open ${base.combine(code)}"
+                "Akan membuka ${base.combine(code)}"
             }
         }
         val parsed = UrlUtils.parse(text) as? UrlParseResult.Valid ?: return null
         return when {
-            ShortenerRegistry.isKnownShortener(parsed.host) -> "Short link — the destination will be checked before opening"
-            !parsed.isHttps -> "Not secure (HTTP): ${parsed.url}"
-            parsed.schemeAdded -> "Will open ${parsed.url}"
+            ShortenerRegistry.isKnownShortener(parsed.host) -> "Tautan pendek — tujuannya akan diperiksa sebelum dibuka"
+            !parsed.isHttps -> "Tidak aman (HTTP): ${parsed.url}"
+            parsed.schemeAdded -> "Akan membuka ${parsed.url}"
             else -> null
         }
     }
 
     private fun describe(invalid: UrlParseResult.Invalid): String = when (invalid.reason) {
-        UrlInvalidReason.EMPTY -> "Enter a website address, for example example.com"
-        UrlInvalidReason.CONTAINS_SPACES -> "Web addresses can't contain spaces."
-        UrlInvalidReason.UNSUPPORTED_SCHEME -> "\"${invalid.scheme}:\" links are not supported. Use an http or https address."
-        UrlInvalidReason.MALFORMED -> "This doesn't look like a valid web address."
-        UrlInvalidReason.INVALID_HOST -> "The website name is not valid. Example: example.com"
-        UrlInvalidReason.INVALID_PORT -> "The port number is not valid."
+        UrlInvalidReason.EMPTY -> "Masukkan alamat situs, misalnya example.com"
+        UrlInvalidReason.CONTAINS_SPACES -> "Alamat web tidak boleh mengandung spasi."
+        UrlInvalidReason.UNSUPPORTED_SCHEME -> "Tautan \"${invalid.scheme}:\" tidak didukung. Gunakan alamat http atau https."
+        UrlInvalidReason.MALFORMED -> "Ini sepertinya bukan alamat web yang valid."
+        UrlInvalidReason.INVALID_HOST -> "Nama situs tidak valid. Contoh: example.com"
+        UrlInvalidReason.INVALID_PORT -> "Nomor port tidak valid."
     }
 }

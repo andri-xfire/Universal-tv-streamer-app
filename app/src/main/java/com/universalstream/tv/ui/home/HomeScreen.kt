@@ -48,7 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.style.TextOverflow
@@ -124,26 +124,19 @@ fun HomeScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(54.dp)
-                        .clip(RoundedCornerShape(18.dp))
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.tertiary,
-                                ),
-                            ),
-                        ),
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(TvGradients.accent()),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(32.dp),
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp),
                     )
                 }
-                Spacer(Modifier.width(16.dp))
+                Spacer(Modifier.width(14.dp))
                 Column {
                     Text("Universal Stream TV", style = MaterialTheme.typography.headlineMedium)
                     Text(
@@ -203,7 +196,7 @@ fun HomeScreen(
                     )
                     TvButton("Tempel", onClick = { viewModel.onPasted(clipboard.getText()?.text) })
                     TvButton("Hapus", onClick = viewModel::clearInput, icon = Icons.Default.Clear)
-                    TvButton("Buka", onClick = viewModel::submit, icon = Icons.Default.PlayArrow, primary = true)
+                    TvButton("Buka", onClick = viewModel::submit, icon = Icons.Default.PlayArrow, containerBrush = TvGradients.accent())
                 }
 
                 Box(Modifier.heightIn(min = 30.dp).padding(start = 4.dp, top = 8.dp)) {
@@ -393,8 +386,9 @@ private fun BaseSelector(
             TvSurface(
                 onClick = { onSelect(base) },
                 shape = RoundedCornerShape(20.dp),
-                containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface,
+                containerBrush = if (isSelected) TvGradients.accent() else null,
                 focusScale = 1.04f,
             ) {
                 Text(
@@ -447,6 +441,7 @@ private fun SiteCard(
         onClick = onClick,
         onLongClick = onLongClick,
         modifier = Modifier.size(width = 236.dp, height = 124.dp),
+        containerBrush = TvGradients.card(),
         contentAlignment = Alignment.TopStart,
     ) {
         Column(Modifier.fillMaxSize().padding(16.dp)) {

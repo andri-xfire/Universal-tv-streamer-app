@@ -15,72 +15,73 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.universalstream.tv.ui.components.LocalReduceMotion
 
+// A bold, saturated palette: electric blue + hot pink + vivid purple on a deep violet base.
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFF8AB4FF),
-    onPrimary = Color(0xFF07254A),
-    primaryContainer = Color(0xFF1E4C86),
-    onPrimaryContainer = Color(0xFFDCE9FF),
-    secondary = Color(0xFFFFB38C),
-    onSecondary = Color(0xFF3A1D08),
-    secondaryContainer = Color(0xFF6B3A24),
-    onSecondaryContainer = Color(0xFFFFE2D2),
-    tertiary = Color(0xFFC7A9FF),
-    onTertiary = Color(0xFF2A1A52),
-    tertiaryContainer = Color(0xFF433072),
-    onTertiaryContainer = Color(0xFFEADDFF),
-    background = Color(0xFF0A0F1E),
-    onBackground = Color(0xFFEDF1F9),
-    surface = Color(0xFF141C2E),
-    onSurface = Color(0xFFEDF1F9),
-    surfaceVariant = Color(0xFF1F2A42),
-    onSurfaceVariant = Color(0xFFC4CEE2),
-    outline = Color(0xFF3B4A68),
-    error = Color(0xFFFF8A8A),
-    onError = Color(0xFF3A0000),
-    errorContainer = Color(0xFF5C1A1A),
-    onErrorContainer = Color(0xFFFFDADA),
+    primary = Color(0xFF4F8CFF),
+    onPrimary = Color(0xFF041A42),
+    primaryContainer = Color(0xFF2E57D8),
+    onPrimaryContainer = Color(0xFFEAF1FF),
+    secondary = Color(0xFFFF5C9D),
+    onSecondary = Color(0xFF42071F),
+    secondaryContainer = Color(0xFFC03573),
+    onSecondaryContainer = Color(0xFFFFE1EC),
+    tertiary = Color(0xFFB174FF),
+    onTertiary = Color(0xFF270A52),
+    tertiaryContainer = Color(0xFF6A38C4),
+    onTertiaryContainer = Color(0xFFF1E6FF),
+    background = Color(0xFF120A2A),
+    onBackground = Color(0xFFF3EFFC),
+    surface = Color(0xFF1C1547),
+    onSurface = Color(0xFFF3EFFC),
+    surfaceVariant = Color(0xFF2A1F5C),
+    onSurfaceVariant = Color(0xFFCDC4EC),
+    outline = Color(0xFF53468C),
+    error = Color(0xFFFF7A95),
+    onError = Color(0xFF42000D),
+    errorContainer = Color(0xFF8E1538),
+    onErrorContainer = Color(0xFFFFDAE1),
 )
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFF2B5BD7),
+    primary = Color(0xFF2F5BEA),
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFDBE6FF),
-    onPrimaryContainer = Color(0xFF001A40),
-    secondary = Color(0xFFB5531F),
+    primaryContainer = Color(0xFFDCE4FF),
+    onPrimaryContainer = Color(0xFF001555),
+    secondary = Color(0xFFE23E7B),
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFFFDBC9),
-    onSecondaryContainer = Color(0xFF341200),
-    tertiary = Color(0xFF6B4EA8),
+    secondaryContainer = Color(0xFFFFD9E4),
+    onSecondaryContainer = Color(0xFF3E0421),
+    tertiary = Color(0xFF7A3FD6),
     onTertiary = Color.White,
-    tertiaryContainer = Color(0xFFEADDFF),
-    onTertiaryContainer = Color(0xFF24104F),
-    background = Color(0xFFF1F4FB),
-    onBackground = Color(0xFF111622),
+    tertiaryContainer = Color(0xFFEBDDFF),
+    onTertiaryContainer = Color(0xFF270A5A),
+    background = Color(0xFFF4F2FC),
+    onBackground = Color(0xFF151227),
     surface = Color.White,
-    onSurface = Color(0xFF111622),
-    surfaceVariant = Color(0xFFE2E8F4),
-    onSurfaceVariant = Color(0xFF3E4759),
-    outline = Color(0xFF8793A8),
-    error = Color(0xFFB3261E),
+    onSurface = Color(0xFF151227),
+    surfaceVariant = Color(0xFFE8E3F7),
+    onSurfaceVariant = Color(0xFF453F62),
+    outline = Color(0xFF897FB2),
+    error = Color(0xFFC0143E),
     onError = Color.White,
-    errorContainer = Color(0xFFF9DEDC),
-    onErrorContainer = Color(0xFF410E0B),
+    errorContainer = Color(0xFFFFD9DF),
+    onErrorContainer = Color(0xFF40000F),
 )
 
-/** Type scale sized for a ~960x540 dp TV canvas viewed from 2–3 metres. */
+/** Type scale for a ~960x540 dp TV canvas, trimmed down so text feels lighter and less bulky. */
 private val TvTypography = Typography(
-    displaySmall = TextStyle(fontSize = 40.sp, lineHeight = 48.sp, fontWeight = FontWeight.SemiBold),
-    headlineMedium = TextStyle(fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight.SemiBold),
-    headlineSmall = TextStyle(fontSize = 27.sp, lineHeight = 34.sp, fontWeight = FontWeight.SemiBold),
-    titleLarge = TextStyle(fontSize = 24.sp, lineHeight = 31.sp, fontWeight = FontWeight.SemiBold),
-    titleMedium = TextStyle(fontSize = 21.sp, lineHeight = 28.sp, fontWeight = FontWeight.Medium),
-    titleSmall = TextStyle(fontSize = 18.sp, lineHeight = 24.sp, fontWeight = FontWeight.Medium),
-    bodyLarge = TextStyle(fontSize = 20.sp, lineHeight = 28.sp),
-    bodyMedium = TextStyle(fontSize = 18.sp, lineHeight = 25.sp),
-    bodySmall = TextStyle(fontSize = 16.sp, lineHeight = 22.sp),
-    labelLarge = TextStyle(fontSize = 19.sp, lineHeight = 24.sp, fontWeight = FontWeight.Medium),
-    labelMedium = TextStyle(fontSize = 16.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium),
-    labelSmall = TextStyle(fontSize = 14.sp, lineHeight = 18.sp, fontWeight = FontWeight.Medium),
+    displaySmall = TextStyle(fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight.Bold),
+    headlineMedium = TextStyle(fontSize = 26.sp, lineHeight = 32.sp, fontWeight = FontWeight.Bold),
+    headlineSmall = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.SemiBold),
+    titleLarge = TextStyle(fontSize = 20.sp, lineHeight = 26.sp, fontWeight = FontWeight.SemiBold),
+    titleMedium = TextStyle(fontSize = 17.sp, lineHeight = 23.sp, fontWeight = FontWeight.Medium),
+    titleSmall = TextStyle(fontSize = 15.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium),
+    bodyLarge = TextStyle(fontSize = 16.sp, lineHeight = 23.sp),
+    bodyMedium = TextStyle(fontSize = 14.sp, lineHeight = 20.sp),
+    bodySmall = TextStyle(fontSize = 13.sp, lineHeight = 18.sp),
+    labelLarge = TextStyle(fontSize = 15.sp, lineHeight = 20.sp, fontWeight = FontWeight.SemiBold),
+    labelMedium = TextStyle(fontSize = 13.sp, lineHeight = 17.sp, fontWeight = FontWeight.Medium),
+    labelSmall = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Medium),
 )
 
 /** TV overscan-safe margins (5% of a 960x540 dp canvas). */
@@ -89,27 +90,48 @@ object TvSafeArea {
     val vertical = 27.dp
 }
 
-/** Soft, depth-giving gradients so screens don't read as one flat block of colour. */
+/** Bold, saturated gradients so the screen reads as a colourful, eye-catching surface. */
 object TvGradients {
-    /** Full-screen background: a gentle primary-tinted top fading into the deep base colour. */
+    /** Full-screen background: a vivid purple → blue → magenta diagonal wash. */
     @Composable
     fun appBackground(): Brush {
         val scheme = MaterialTheme.colorScheme
-        return Brush.verticalGradient(
-            0.0f to lerp(scheme.background, scheme.primary, 0.12f),
-            0.45f to scheme.background,
-            1.0f to lerp(scheme.background, scheme.tertiary, 0.08f),
+        return Brush.linearGradient(
+            0.0f to lerp(scheme.background, scheme.tertiary, 0.40f),
+            0.50f to scheme.background,
+            1.0f to lerp(scheme.background, scheme.primary, 0.38f),
         )
     }
 
-    /** The raised "hero" panel that holds the search controls. */
+    /** The raised "hero" panel that holds the search controls — a rich blue → violet blend. */
     @Composable
     fun heroPanel(): Brush {
         val scheme = MaterialTheme.colorScheme
         return Brush.linearGradient(
             listOf(
-                lerp(scheme.surface, scheme.primary, 0.10f),
-                lerp(scheme.surface, scheme.tertiary, 0.06f),
+                lerp(scheme.surface, scheme.primary, 0.30f),
+                lerp(scheme.surface, scheme.tertiary, 0.26f),
+            ),
+        )
+    }
+
+    /** A vivid accent gradient used on primary buttons, the logo badge and the selected chip. */
+    @Composable
+    fun accent(): Brush {
+        val scheme = MaterialTheme.colorScheme
+        return Brush.linearGradient(
+            listOf(scheme.primary, scheme.tertiary, scheme.secondary),
+        )
+    }
+
+    /** A gentle per-card tint so the cards look colourful without hurting text contrast. */
+    @Composable
+    fun card(): Brush {
+        val scheme = MaterialTheme.colorScheme
+        return Brush.linearGradient(
+            listOf(
+                lerp(scheme.surface, scheme.primary, 0.20f),
+                lerp(scheme.surface, scheme.secondary, 0.16f),
             ),
         )
     }

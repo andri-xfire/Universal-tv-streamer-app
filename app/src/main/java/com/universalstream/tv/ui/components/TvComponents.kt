@@ -37,8 +37,8 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -73,6 +73,7 @@ fun TvSurface(
     focusedContainerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     focusedContentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    containerBrush: Brush? = null,
     focusScale: Float = 1.05f,
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable BoxScope.(focused: Boolean) -> Unit,
@@ -97,7 +98,6 @@ fun TvSurface(
         else -> contentColor
     }
     val outline = MaterialTheme.colorScheme.onBackground
-    val glowColor = MaterialTheme.colorScheme.primary
     val longClickKeys = if (onLongClick != null) {
         Modifier.onPreviewKeyEvent { event ->
             if (event.key == Key.Menu) {
@@ -117,15 +117,14 @@ fun TvSurface(
                 scaleX = scale
                 scaleY = scale
             }
+            .clip(shape)
             .then(
-                if (focused) {
-                    Modifier.shadow(14.dp, shape, ambientColor = glowColor, spotColor = glowColor)
+                if (containerBrush != null && enabled && !focused) {
+                    Modifier.background(containerBrush, shape)
                 } else {
-                    Modifier
+                    Modifier.background(background, shape)
                 },
             )
-            .clip(shape)
-            .background(background, shape)
             .then(if (focused) Modifier.border(3.dp, outline, shape) else Modifier)
             .then(longClickKeys)
             .combinedClickable(
@@ -151,6 +150,7 @@ fun TvButton(
     icon: ImageVector? = null,
     primary: Boolean = false,
     enabled: Boolean = true,
+    containerBrush: Brush? = null,
 ) {
     TvSurface(
         onClick = onClick,
@@ -158,7 +158,12 @@ fun TvButton(
         enabled = enabled,
         shape = RoundedCornerShape(28.dp),
         containerColor = if (primary) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = if (primary) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+        contentColor = when {
+            containerBrush != null -> Color.White
+            primary -> MaterialTheme.colorScheme.onPrimaryContainer
+            else -> MaterialTheme.colorScheme.onSurface
+        },
+        containerBrush = containerBrush,
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),

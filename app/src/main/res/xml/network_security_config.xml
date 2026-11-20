@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HTTP is allowed because users may type http:// sites; the app warns before opening them.
+     Only system certificate authorities are trusted (no user-installed CAs), and certificate
+     errors are never bypassed. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon foreground: a TV screen with a play symbol, kept inside the 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M31,35 L77,35 A4,4 0 0 1 81,39 L81,67 A4,4 0 0 1 77,71 L31,71 A4,4 0 0 1 27,67 L27,39 A4,4 0 0 1 31,35 Z" />
+    <path
+        android:fillColor="#FF0E4A6E"
+        android:pathData="M31,39 L77,39 L77,67 L31,67 Z" />
+    <path
+        android:fillColor="#FF6CC7FF"
+        android:pathData="M48,45 L63,53 L48,61 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M43,75 L65,75 L65,78 L43,78 Z" />
+</vector>
